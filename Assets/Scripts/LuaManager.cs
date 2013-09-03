@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using LuaInterface;
+using LuaBindingTestSP;
 
 public class LuaManager : MonoBehaviour {
 	//Reference to the Lua virtual machine
