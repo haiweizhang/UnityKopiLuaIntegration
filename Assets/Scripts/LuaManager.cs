@@ -17,12 +17,12 @@ public class LuaManager : MonoBehaviour {
 		luaVirtualMachine["luabinding"] = binding;
 		
 		//test luabinding test
-		LuaBindingTest bindingTest = new LuaBindingTest();
+		LuaBindingTest bindingTest = LuaBindingTest.SharedInstance();
 		bindingTest.name = "name1";
 		luaVirtualMachine["LuaBindingTest"] = bindingTest;
 		//luaVirtualMachine[""] = ;
 		
-		Debug.LogError("LuaManager: " + Application.persistentDataPath);
+		//Debug.LogError("LuaManager: " + Application.persistentDataPath);
 		
 		//Run the code contained within the file
 #if UNITY_ANDROID
@@ -33,5 +33,20 @@ public class LuaManager : MonoBehaviour {
 		//Trigger binding in c# to call the bound Lua function
 		
 		binding.MessageToLua();
+		TestStaticFunction();
+	}
+	
+	public void TestStaticFunction()
+	{
+		
+		luaVirtualMachine.RegisterFunction("StaticPrintMessage", null, typeof(LuaBindingTest).GetMethod("StaticPrintMessage"));
+		luaVirtualMachine.RegisterFunction("SharedInstance", null, typeof(LuaBindingTest).GetMethod("SharedInstance"));
+		luaVirtualMachine.DoString("StaticPrintMessage(\"hello\")");
+		
+		luaVirtualMachine.DoString("SharedInstance():PrintMessage(\"hello\")");
+		return;
+//		KopiLua.Lua.lua_pushcfunction(luaVirtualMachine.luaState, ToLuaInterface.ToLua_LuaBindingTest_StaticPrintMessage);
+//		KopiLua.Lua.lua_setglobal(luaVirtualMachine.luaState, "StaticPrintMessage");
+//		luaVirtualMachine.DoString("StaticPrintMessage(\"hello\")");
 	}
 }
